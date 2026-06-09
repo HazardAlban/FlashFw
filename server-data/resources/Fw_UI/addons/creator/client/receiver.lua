@@ -16,12 +16,20 @@ _Fw.onReceive('creator:init', function()
     SetEntityVisible(ped, false, false)
     DoScreenFadeIn(500)
 
+    Wait(1000) -- Petite pause pour s'assurer que tout est bien en place avant d'ouvrir le menu
     -- On ouvre ton menu
     SetNuiFocus(true, true)
     SendNUIMessage({
         action = "openCreatorIdentity"
     })
     _Fw.log("Menu identité ouvert pour le nouveau joueur.")
+end)
+
+RegisterCommand('opencreator', function()
+    SetNuiFocus(true, true)
+    SendNUIMessage({
+        action = "openCreatorIdentity"
+    })
 end)
 
 -- ==========================================

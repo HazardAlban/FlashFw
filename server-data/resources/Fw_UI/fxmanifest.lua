@@ -17,11 +17,17 @@ client_scripts({
 
 -- UI resources
 ui_page("ui/web/index.html")
-files({
-    "ui/web/index.html",
-    "ui/css/global.css",
-    "ui/js/global.js",
+-- files({
+--     "ui/web/index.html",
+--     "ui/css/global.css",
+--     "ui/js/global.js",
 
-    "ui/css/**/*.css",
-    "ui/js/**/*.js",
-})
+--     "ui/css/**/*.css",
+--     "ui/js/**/*.js",
+-- })
+
+
+-- Dans Fw_UI/fxmanifest.lua
+files {
+    'ui/**/*', -- Charge tous les HTML, CSS, JS et images sans erreur !
+}

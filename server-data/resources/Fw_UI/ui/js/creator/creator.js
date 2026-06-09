@@ -4,6 +4,7 @@ let selectedGender = "m";
 
 // Écouteur de message pour ouvrir l'interface depuis le Lua
 window.addEventListener('message', function(event) {
+    print("Message reçu dans creator.js :", event.data);
     if (event.data.action === "openCreatorIdentity") {
         document.getElementById('creator-container').classList.remove('hidden');
         resetCreatorForm();
