@@ -4,7 +4,7 @@ games({ 'gta5' })
 
 shared_script({
     "@Fw/imports.lua",
-    "config/global.lua",
+    "config/config.lua",
 });
 
 server_scripts({
@@ -16,7 +16,7 @@ client_scripts({
 });
 
 -- UI resources
-ui_page("ui/index.html")
+ui_page("ui/web/index.html")
 files({
     "ui/web/index.html",
     "ui/css/global.css",
