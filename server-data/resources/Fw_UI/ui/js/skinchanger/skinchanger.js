@@ -1,16 +1,17 @@
-let currentGender = "male"; // Sera mis à jour par le Lua
+let currentGender = "male";
 let currentSkinData = {};
+let isCreatingNew = false; // Nouvelle variable
 
 window.addEventListener('message', function(event) {
     let data = event.data;
     
     if (data.action === "openSkinChanger") {
         currentGender = data.gender;
+        isCreatingNew = data.isNewCharacter; // On capture l'info du Lua
         document.getElementById('skinchanger-container').classList.remove('hidden');
-        loadSkinCategory(0, 'Visage'); // Ouvre la catégorie visage par défaut
+        loadSkinCategory(0, 'Visage');
     }
 });
-
 // Génère la liste des items
 function loadSkinCategory(componentId, catName) {
     // Met à jour les boutons actifs
@@ -60,10 +61,12 @@ function changeCam(type) {
     });
 }
 
+// Dans ta fonction saveSkin() :
 function saveSkin() {
     document.getElementById('skinchanger-container').classList.add('hidden');
     fetch(`https://${GetParentResourceName()}/saveSkinFinal`, {
         method: 'POST',
-        body: JSON.stringify({ skin: currentSkinData })
+        // On inclut isNewCharacter dans l'envoi
+        body: JSON.stringify({ skin: currentSkinData, isNewCharacter: isCreatingNew })
     });
 }
