@@ -1,0 +1,6 @@
+
+
+_FwENUM_GAMESTATE = {
+    WAITING = 1,
+    PLAYING = 2
+}

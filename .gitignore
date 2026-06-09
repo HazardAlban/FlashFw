@@ -1,0 +1,4 @@
+server
+server-data/cache
+server-data/server.cfg
+server-data/runserver.bat
