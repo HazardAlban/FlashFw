@@ -40,16 +40,5 @@ _Fw.onReceive("serverReturnedCb", function()
     _Fw.setIsWaitingForServer(false)
 end)
 
-CreateThread(function()
-    _Fw.log("Demarrage du client...")
-    _Fw.toInternal("loaded")
-    while (true) do
-        Wait(1)
-        if (NetworkIsPlayerActive(PlayerId())) then
-            _Fw.toInternal("joined")
-            break
-        end
-    end
-end)
 
 _Fw.log("Bienvenue sur ^1Framework ^7!")

@@ -4,52 +4,86 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="../css/global.css">
     <link rel="stylesheet" href="../css/creator/creator.css">
+    <link rel="stylesheet" href="../css/skinchanger/skinchanger.css">
 </head>
 <body>
     <div id="creator-container" class="hidden">
-    <div class="creator-box">
-        <div class="creator-header">
-            <h1>Enregistrement</h1>
-            <p>Créez votre identité sur le réseau</p>
-        </div>
-
-        <form id="creator-form" onsubmit="submitIdentity(event)">
-            <div class="input-group">
-                <label for="char-firstname">Prénom</label>
-                <input type="text" id="char-firstname" placeholder="Ex: Jean" required maxlength="20" autocomplete="off">
+        <div class="creator-box">
+            <div class="creator-header">
+                <h1>Enregistrement</h1>
+                <p>Créez votre identité sur le réseau</p>
             </div>
 
-            <div class="input-group">
-                <label for="char-lastname">Nom de famille</label>
-                <input type="text" id="char-lastname" placeholder="Ex: Dupont" required maxlength="20" autocomplete="off">
-            </div>
-
-            <div class="input-group">
-                <label for="char-dob">Date de naissance</label>
-                <input type="date" id="char-dob" required min="1940-01-01" max="2010-01-01">
-            </div>
-
-            <div class="input-group">
-                <label for="char-nationality">Nationalité</label>
-                <input type="text" id="char-nationality" placeholder="Ex: Américaine" required maxlength="25" autocomplete="off">
-            </div>
-
-            <div class="input-group">
-                <label>Sexe</label>
-                <div class="gender-selector">
-                    <button type="button" id="gender-m" class="gender-btn active" onclick="setGender('m')">Masculin</button>
-                    <button type="button" id="gender-f" class="gender-btn" onclick="setGender('f')">Féminin</button>
+            <form id="creator-form" onsubmit="submitIdentity(event)">
+                <div class="input-group">
+                    <label for="char-firstname">Prénom</label>
+                    <input type="text" id="char-firstname" placeholder="Ex: Jean" required maxlength="20" autocomplete="off">
                 </div>
+
+                <div class="input-group">
+                    <label for="char-lastname">Nom de famille</label>
+                    <input type="text" id="char-lastname" placeholder="Ex: Dupont" required maxlength="20" autocomplete="off">
+                </div>
+
+                <div class="input-group">
+                    <label for="char-dob">Date de naissance</label>
+                    <input type="date" id="char-dob" required min="1940-01-01" max="2010-01-01">
+                </div>
+
+                <div class="input-group">
+                    <label for="char-nationality">Nationalité</label>
+                    <input type="text" id="char-nationality" placeholder="Ex: Américaine" required maxlength="25" autocomplete="off">
+                </div>
+
+                <div class="input-group">
+                    <label>Sexe</label>
+                    <div class="gender-selector">
+                        <button type="button" id="gender-m" class="gender-btn active" onclick="setGender('m')">Masculin</button>
+                        <button type="button" id="gender-f" class="gender-btn" onclick="setGender('f')">Féminin</button>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit-identity">
+                    Confirmer l'identité <i class="fas fa-id-card"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+
+    <div id="skinchanger-container" class="hidden">
+        <div class="skinchanger-sidebar">
+            <div class="skin-header">
+                <h1>Génétique</h1>
+                <p>Modifiez votre apparence</p>
             </div>
 
-            <button type="submit" class="btn-submit-identity">
-                Confirmer l'identité <i class="fas fa-id-card"></i>
+            <div class="skin-categories">
+                <button class="cat-btn active" onclick="loadSkinCategory(0, 'Visage')">Visage</button>
+                <button class="cat-btn" onclick="loadSkinCategory(2, 'Cheveux')">Cheveux</button>
+                <button class="cat-btn" onclick="loadSkinCategory(4, 'Jambes')">Jambes</button>
+                <button class="cat-btn" onclick="loadSkinCategory(6, 'Chaussures')">Chaussures</button>
+                <button class="cat-btn" onclick="loadSkinCategory(11, 'Torse')">Torse</button>
+            </div>
+
+            <div class="skin-grid" id="skin-items-list">
+                </div>
+
+            <div class="cam-controls">
+                <button onclick="changeCam('head')">Tête</button>
+                <button onclick="changeCam('body')">Torse</button>
+                <button onclick="changeCam('legs')">Jambes</button>
+            </div>
+
+            <button class="btn-save-skin" onclick="saveSkin()">
+                Valider l'apparence
             </button>
-        </form>
+        </div>
     </div>
-</div>
+
+    <script src="../js/skinchanger/skinchanger.js"></script>
 
     <script src="../js/global.js"></script>
-    <script src="../js/creator.js"></script>
+    <script src="../js/creator/creator.js"></script>
 </body>
 </html>

@@ -1,63 +1,85 @@
--- ==========================================
--- RECEPTION DE L'EVENT DU CORE (Nouveau Joueur)
--- ==========================================
-_Fw.onReceive('creator:init', function()
-    -- Sécurité : On attend que le jeu ait chargé le joueur local
-    while not NetworkIsPlayerActive(PlayerId()) do Wait(50) end
+local skinCam = nil
 
-    -- ON TUE L'ÉCRAN DE CHARGEMENT INFINI ("Awaiting scripts")
-    ShutdownLoadingScreen()
-    ShutdownLoadingScreenNui()
-
-    -- On place le joueur (Invisible et bloqué) à l'aéroport en attendant
+-- ==========================================
+-- OUVERTURE DU SKINCHANGER
+-- ==========================================
+_Fw.onReceive('skinchanger:init', function(gender)
     local ped = PlayerPedId()
-    SetEntityCoordsNoOffset(ped, -1042.48, -2745.57, 21.36, false, false, false, true)
-    FreezeEntityPosition(ped, true)
-    SetEntityVisible(ped, false, false)
-    DoScreenFadeIn(500)
-
-    Wait(1000) -- Petite pause pour s'assurer que tout est bien en place avant d'ouvrir le menu
-    -- On ouvre ton menu
-    SetNuiFocus(true, true)
-    SendNUIMessage({
-        action = "openCreatorIdentity"
-    })
-    _Fw.log("Menu identité ouvert pour le nouveau joueur.")
-end)
-
-RegisterCommand('opencreator', function()
-    SetNuiFocus(true, true)
-    SendNUIMessage({
-        action = "openCreatorIdentity"
-    })
-end)
-
--- ==========================================
--- VALIDATION DU NUI ET ENVOI AU SERVEUR
--- ==========================================
-RegisterNUICallback('submitCharacterIdentity', function(data, cb)
-    SetNuiFocus(false, false)
-    -- On envoie les infos au serveur Fw_UI pour l'insertion SQL
-    _Fw.toServer('creator:registerIdentity', data)
-    cb('ok')
-end)
-
--- ==========================================
--- FIN DE LA CRÉATION -> SPAWN
--- ==========================================
-_Fw.onReceive('creator:finishSpawn', function()
-    -- On met un ped de base pour l'instant
-    local model = `mp_m_freemode_01`
+    
+    -- Application du ped de base selon le sexe choisi dans l'identité
+    local model = gender == "m" and `mp_m_freemode_01` or `mp_f_freemode_01`
     RequestModel(model)
     while not HasModelLoaded(model) do Wait(10) end
     SetPlayerModel(PlayerId(), model)
     SetModelAsNoLongerNeeded(model)
 
-    -- On le rend visible et on le débloque
-    local ped = PlayerPedId()
+    ped = PlayerPedId() -- Maj du ped après changement de model
+    
+    -- Positionnement pour la création
     SetEntityCoordsNoOffset(ped, -1042.48, -2745.57, 21.36, false, false, false, true)
+    SetEntityHeading(ped, 330.0)
+    FreezeEntityPosition(ped, true)
     SetEntityVisible(ped, true, false)
+
+    -- Création de la caméra Face
+    local coords = GetEntityCoords(ped)
+    skinCam = CreateCam("DEFAULT_SCRIPTED_CAMERA", true)
+    SetCamCoord(skinCam, coords.x - 0.5, coords.y + 1.5, coords.z + 0.6)
+    PointCamAtCoord(skinCam, coords.x, coords.y, coords.z + 0.6)
+    SetCamActive(skinCam, true)
+    RenderScriptCams(true, false, 0, true, true)
+
+    Wait(500)
+
+    SetNuiFocus(true, true)
+    SendNUIMessage({
+        action = "openSkinChanger",
+        gender = gender == "m" and "male" or "female"
+    })
+end)
+
+-- ==========================================
+-- CALLBACKS NUI (Prévisualisation & Caméra)
+-- ==========================================
+RegisterNUICallback('updateSkinPreview', function(data, cb)
+    local ped = PlayerPedId()
+    -- Component : 0 = Tête, 2 = Cheveux, 3 = Bras, 4 = Pantalon, 6 = Chaussures, 11 = Torse
+    SetPedComponentVariation(ped, data.component, data.drawable, data.texture, 2)
+    cb('ok')
+end)
+
+RegisterNUICallback('changeSkinCam', function(data, cb)
+    local ped = PlayerPedId()
+    local coords = GetEntityCoords(ped)
+    
+    if data.camType == 'head' then
+        SetCamCoord(skinCam, coords.x - 0.5, coords.y + 1.5, coords.z + 0.6)
+        PointCamAtCoord(skinCam, coords.x, coords.y, coords.z + 0.6)
+    elseif data.camType == 'body' then
+        SetCamCoord(skinCam, coords.x - 0.8, coords.y + 2.0, coords.z + 0.2)
+        PointCamAtCoord(skinCam, coords.x, coords.y, coords.z + 0.2)
+    elseif data.camType == 'legs' then
+        SetCamCoord(skinCam, coords.x - 0.8, coords.y + 2.0, coords.z - 0.5)
+        PointCamAtCoord(skinCam, coords.x, coords.y, coords.z - 0.5)
+    end
+    cb('ok')
+end)
+
+-- ==========================================
+-- FIN DE CRÉATION ET SAUVEGARDE
+-- ==========================================
+RegisterNUICallback('saveSkinFinal', function(data, cb)
+    SetNuiFocus(false, false)
+    
+    -- Destruction de la caméra
+    RenderScriptCams(false, true, 500, true, true)
+    DestroyCam(skinCam, false)
+    skinCam = nil
+
+    local ped = PlayerPedId()
     FreezeEntityPosition(ped, false)
 
-    _Fw.log("Création terminée, le joueur a spawn.")
+    -- Envoi au serveur pour sauvegarde SQL
+    _Fw.toServer('skinchanger:saveFinalSkin', data.skin)
+    cb('ok')
 end)
