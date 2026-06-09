@@ -18,7 +18,7 @@ client_scripts({
 -- UI resources
 ui_page("ui/index.html")
 files({
-    "ui/index.html",
+    "ui/web/index.html",
     "ui/css/global.css",
     "ui/js/global.js",
 

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="creator-container" class="hidden">
+    <div class="creator-box">
+        <div class="creator-header">
+            <h1>Enregistrement</h1>
+            <p>Créez votre identité sur le réseau</p>
+        </div>
+
+        <form id="creator-form" onsubmit="submitIdentity(event)">
+            <div class="input-group">
+                <label for="char-firstname">Prénom</label>
+                <input type="text" id="char-firstname" placeholder="Ex: Jean" required maxlength="20" autocomplete="off">
+            </div>
+
+            <div class="input-group">
+                <label for="char-lastname">Nom de famille</label>
+                <input type="text" id="char-lastname" placeholder="Ex: Dupont" required maxlength="20" autocomplete="off">
+            </div>
+
+            <div class="input-group">
+                <label for="char-dob">Date de naissance</label>
+                <input type="date" id="char-dob" required min="1940-01-01" max="2010-01-01">
+            </div>
+
+            <div class="input-group">
+                <label for="char-nationality">Nationalité</label>
+                <input type="text" id="char-nationality" placeholder="Ex: Américaine" required maxlength="25" autocomplete="off">
+            </div>
+
+            <div class="input-group">
+                <label>Sexe</label>
+                <div class="gender-selector">
+                    <button type="button" id="gender-m" class="gender-btn active" onclick="setGender('m')">Masculin</button>
+                    <button type="button" id="gender-f" class="gender-btn" onclick="setGender('f')">Féminin</button>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit-identity">
+                Confirmer l'identité <i class="fas fa-id-card"></i>
+            </button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

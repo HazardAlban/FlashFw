@@ -132,3 +132,8 @@ _Fw.countTableIp = function(table)
     end
     return i
 end
+
+-- À rajouter à la fin de Fw/src/core/shared/main.lua
+exports('GetCoreObject', function()
+    return _Fw
+end)

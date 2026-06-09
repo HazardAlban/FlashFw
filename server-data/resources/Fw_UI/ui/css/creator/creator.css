@@ -1,0 +1,144 @@
+/* Fw_UI/src/web/css/creator.css */
+
+#creator-container {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(0, 0, 0, 0.4); /* Léger voile sur le jeu */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Poppins', sans-serif;
+    user-select: none;
+}
+
+.creator-box {
+    width: 400px;
+    background: var(--black-60);
+    border: 1px solid var(--black2-20);
+    border-radius: 4px;
+    box-shadow: 0 15px 50px rgba(0,0,0,0.9);
+    overflow: hidden;
+}
+
+.creator-header {
+    background: var(--black-40);
+    padding: 25px;
+    text-align: center;
+    border-bottom: 2px solid var(--accent-green);
+}
+
+.creator-header h1 {
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #ffffff;
+}
+
+.creator-header p {
+    margin: 5px 0 0;
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#creator-form {
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.input-group label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+}
+
+.input-group input {
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--black2-20);
+    border-radius: 4px;
+    padding: 12px;
+    color: #ffffff;
+    font-size: 13px;
+    font-family: 'Poppins', sans-serif;
+    outline: none;
+    transition: all 0.2s ease-in-out;
+}
+
+.input-group input:focus {
+    border-color: var(--accent-green);
+    background: rgba(0, 0, 0, 0.7);
+}
+
+/* Style spécifique pour le calendrier natif */
+.input-group input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1); /* Force l'icône du calendrier en blanc */
+    cursor: pointer;
+}
+
+/* Boutons de Genre */
+.gender-selector {
+    display: flex;
+    gap: 10px;
+}
+
+.gender-btn {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--black2-20);
+    border-radius: 4px;
+    padding: 10px;
+    color: var(--text-muted);
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.gender-btn.active, .gender-btn:hover {
+    border-color: var(--accent-green);
+    color: #ffffff;
+    background: rgba(255,255,255,0.02);
+}
+
+/* Bouton Soumettre */
+.btn-submit-identity {
+    margin-top: 10px;
+    background: var(--accent-green);
+    border: none;
+    border-radius: 4px;
+    padding: 14px;
+    color: var(--black);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: 0.2s;
+}
+
+.btn-submit-identity:hover {
+    filter: brightness(1.1);
+    box-shadow: 0 4px 15px rgba(27, 171, 113, 0.3);
+}

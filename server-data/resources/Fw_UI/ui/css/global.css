@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Montserrat:wght@600;700&display=swap');
+
+:root {
+    --black: rgba(0, 0, 0, 1);
+    --black-40: rgba(0, 0, 0, 0.4);
+    --black-60: rgba(0, 0, 0, 0.6);
+    --black2-20: rgba(2, 2, 2, 0.2);
+    --accent-green: #1bab71;
+    --text-main: #ffffff;
+    --text-muted: rgba(255, 255, 255, 0.5);
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* Empêche les barres de défilement sur les bords de l'écran */
+    user-select: none; /* Empêche de surligner le texte en bleu avec la souris */
+}
+
+/* Classe utilitaire globale pour cacher les interfaces */
+.hidden {
+    display: none !important;
+}
