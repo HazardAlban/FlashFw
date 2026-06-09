@@ -1,16 +1,13 @@
 -- Fw/imports.lua
 if GetCurrentResourceName() == 'Fw' then return end
 
-_Fw = {}
+-- Récupération du Core
+_Fw = exports['Fw']:GetCoreObject()
 
--- Métatable pour rediriger automatiquement vers les exports du Core
-setmetatable(_Fw, {
-    __index = function(self, key)
-        return exports['Fw'][key]()
-    end
-})
-
--- On injecte directement la suite Ox pour un accès ultra-rapide partout
-_Fw.Lib = exports.ox_lib
+-- Injection de la suite Ox nativement dans l'objet Fw
 _Fw.Inventory = exports.ox_inventory
 _Fw.MySQL = exports.oxmysql
+
+-- (Optionnel) Tu peux aussi ajouter ox_lib ici, 
+-- bien qu'il soit souvent préférable de l'inclure via le @ox_lib/init.lua dans le fxmanifest.
+_Fw.Lib = exports.ox_lib

@@ -5,6 +5,8 @@ games({ 'gta5' })
 shared_script({
     -- Config
     "config/global.lua",
+    -- Imports
+    "imports.lua",
     -- Enum
     "src/class/enum/*.lua",
     -- Objects
