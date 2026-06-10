@@ -1,20 +1,17 @@
--- Fw_UI/addons/skinchanger/client/receiver.lua
 local isSkinChangerOpen = false
 local skinCam = nil
 
--- Commande Dev Admin pour le futur (S'ouvre sur place, sans TP)
 RegisterCommand('devskin', function()
-    -- Paramètres: Sexe 'm', isNewCharacter = false
-    _Fw.toInternal('skinchanger:init', 'm', false) 
+    TriggerEvent('Flash:skinchanger:init', 'm', false) 
 end, false)
 
-_Fw.onReceive('skinchanger:init', function(sex, isNewCharacter)
+RegisterNetEvent('Flash:skinchanger:init')
+AddEventHandler('Flash:skinchanger:init', function(sex, isNewCharacter)
     if isSkinChangerOpen then return end
     isSkinChangerOpen = true
 
     local ped = PlayerPedId()
 
-    -- Si c'est une création, on force le ped de base
     if isNewCharacter then
         local model = (sex == "m" or sex == "M") and `mp_m_freemode_01` or `mp_f_freemode_01`
         RequestModel(model)
@@ -30,12 +27,10 @@ _Fw.onReceive('skinchanger:init', function(sex, isNewCharacter)
     FreezeEntityPosition(ped, true)
     SetEntityVisible(ped, true, false)
 
-    -- Caméra dynamique (s'adapte à la position actuelle du joueur)
     local coords = GetEntityCoords(ped)
     local forward = GetEntityForwardVector(ped)
     
     skinCam = CreateCam("DEFAULT_SCRIPTED_CAMERA", true)
-    -- Place la caméra devant le joueur
     SetCamCoord(skinCam, coords.x + (forward.x * 1.5), coords.y + (forward.y * 1.5), coords.z + 0.6)
     PointCamAtCoord(skinCam, coords.x, coords.y, coords.z + 0.6)
     SetCamActive(skinCam, true)
@@ -46,7 +41,7 @@ _Fw.onReceive('skinchanger:init', function(sex, isNewCharacter)
     SendNUIMessage({
         action = "openSkinChanger",
         gender = (sex == "m" or sex == "M") and "male" or "female",
-        isNewCharacter = isNewCharacter -- On passe la variable au NUI
+        isNewCharacter = isNewCharacter
     })
 end)
 
@@ -83,14 +78,12 @@ RegisterNUICallback('saveSkinFinal', function(data, cb)
 
     local ped = PlayerPedId()
     
-    -- Si c'est un admin, on le défreeze de suite. 
-    -- Si création, le spawn final le fera.
     if not data.isNewCharacter then
         FreezeEntityPosition(ped, false)
     end
 
     isSkinChangerOpen = false
-    -- On transmet isNewCharacter au serveur pour qu'il sache quoi faire ensuite
-    _Fw.toServer('skinchanger:saveFinalSkin', data.skin, data.isNewCharacter)
+    -- Envoi natif
+    TriggerServerEvent('Flash:skinchanger:saveFinalSkin', data.skin, data.isNewCharacter)
     cb('ok')
 end)
