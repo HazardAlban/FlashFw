@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Montserrat:wght@600;700&display=swap');
 
 :root {
-    --black: rgba(0, 0, 0, 1);
+    --black: rgba(0, 0, 0, 0.8);
     --black-40: rgba(0, 0, 0, 0.4);
     --black-60: rgba(0, 0, 0, 0.6);
     --black2-20: rgba(2, 2, 2, 0.2);

@@ -51,35 +51,48 @@
     </div>
 
 
-    <div id="skinchanger-container" class="hidden">
-        <div class="skinchanger-sidebar">
-            <div class="skin-header">
-                <h1>Génétique</h1>
-                <p>Modifiez votre apparence</p>
-            </div>
-
-            <div class="skin-categories">
-                <button class="cat-btn active" onclick="loadSkinCategory(0, 'Visage')">Visage</button>
-                <button class="cat-btn" onclick="loadSkinCategory(2, 'Cheveux')">Cheveux</button>
-                <button class="cat-btn" onclick="loadSkinCategory(4, 'Jambes')">Jambes</button>
-                <button class="cat-btn" onclick="loadSkinCategory(6, 'Chaussures')">Chaussures</button>
-                <button class="cat-btn" onclick="loadSkinCategory(11, 'Torse')">Torse</button>
-            </div>
-
-            <div class="skin-grid" id="skin-items-list">
-                </div>
-
-            <div class="cam-controls">
-                <button onclick="changeCam('head')">Tête</button>
-                <button onclick="changeCam('body')">Torse</button>
-                <button onclick="changeCam('legs')">Jambes</button>
-            </div>
-
-            <button class="btn-save-skin" onclick="saveSkin()">
-                Valider l'apparence
-            </button>
+<div id="skinchanger-container" class="hidden">
+    <div class="skinchanger-sidebar">
+        <div class="skin-header">
+            <h1>Créateur</h1>
+            <p>Façonnez votre identité visuelle</p>
         </div>
+
+        <div class="skin-tabs">
+            <button class="tab-btn active" data-tab="genetic">Génétique</button>
+            <button class="tab-btn" data-tab="face">Traits</button>
+            <button class="tab-btn" data-tab="style">Apparence</button>
+            <button class="tab-btn" data-tab="outfit">Tenue</button>
+        </div>
+
+        <div class="skin-content-wrapper" id="dynamic-content">
+            </div>
+
+        <div class="bottom-controls-container">
+            <div id="global-opacity-box" class="hidden">
+                </div>
+            
+            <div id="global-color-box" class="hidden">
+                <div class="input-group">
+                    <label>Couleur Principale</label>
+                    <input type="range" id="global-color-p" min="0" max="63" value="0" oninput="applySkinColor()">
+                </div>
+                <div class="input-group">
+                    <label>Reflets / Variante</label>
+                    <input type="range" id="global-color-s" min="0" max="63" value="0" oninput="applySkinColor()">
+                </div>
+            </div>
+        </div>
+
+        <div class="cam-controls">
+            <button class="btn-icon" onclick="rotateCam('left')"><i class="fa-solid fa-rotate-left"></i></button>
+            <button onclick="changeCam('head')"><i class="fa-solid fa-user"></i> Visage</button>
+            <button onclick="changeCam('body')"><i class="fa-solid fa-child"></i> Corps</button>
+            <button class="btn-icon" onclick="rotateCam('right')"><i class="fa-solid fa-rotate-right"></i></button>
+        </div>
+        <button class="btn-save-skin" onclick="saveSkin()">Valider mon personnage</button>
     </div>
+</div>
 
     <script src="../js/skinchanger/skinchanger.js"></script>
 

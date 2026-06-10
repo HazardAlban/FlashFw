@@ -30,4 +30,5 @@ ui_page("ui/web/index.html")
 -- Dans Fw_UI/fxmanifest.lua
 files {
     'ui/**/*', -- Charge tous les HTML, CSS, JS et images sans erreur !
+    'ui/web/assets/default.png',
 }
