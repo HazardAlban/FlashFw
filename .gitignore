@@ -2,3 +2,7 @@ server
 server-data/cache
 server-data/server.cfg
 server-data/runserver.bat
+server-data/resources/fivem-greenscreener
+server-data/resources/screenshot-basic
+server-data/resources/webpack
+server-data/resources/yarn
