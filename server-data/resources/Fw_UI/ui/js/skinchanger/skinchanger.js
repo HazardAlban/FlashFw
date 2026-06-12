@@ -4,7 +4,6 @@ let currentSkinData = {
     genetic: { shapeMother: 21, shapeFather: 0, skinMother: 21, skinFather: 0, shapeMix: 0.5, skinMix: 0.5 },
     features: {}, overlays: {}, colors: {}, outfit: 'caleçon'
 };
-let activeSubCategory = { id: 0, isComp: false };
 
 const parentsList = [
     "Benjamin", "Daniel", "Joshua", "Noah", "Andrew", "Juan", "Alex", "Isaac", "Evan", "Ethan",
@@ -14,11 +13,27 @@ const parentsList = [
     "Charlotte", "Emma", "Claude", "Niko", "John", "Misty"
 ];
 
+const appearanceList = [
+    { id: 2, name: 'Coupe de Cheveux', isComp: true, hasColor: true, hasOp: false, max: 74, type: 'hair' },
+    { id: 'eye', name: 'Couleur des Yeux', isComp: false, hasColor: false, hasOp: false, max: 31, type: 'eye' },
+    { id: 1, name: 'Barbe', isComp: false, hasColor: true, hasOp: true, max: 28, type: 'overlay' },
+    { id: 22, name: 'Sourcils', isComp: false, hasColor: true, hasOp: true, max: 33, type: 'overlay' },
+    { id: 10, name: 'Pilosité Torse', isComp: false, hasColor: true, hasOp: true, max: 16, type: 'overlay' },
+    { id: 4, name: 'Maquillage', isComp: false, hasColor: true, hasOp: true, max: 74, type: 'overlay' },
+    { id: 8, name: 'Rouge à lèvres', isComp: false, hasColor: true, hasOp: true, max: 9, type: 'overlay' },
+    { id: 5, name: 'Blush', isComp: false, hasColor: true, hasOp: true, max: 6, type: 'overlay' },
+    { id: 3, name: 'Rides & Vieillesse', isComp: false, hasColor: false, hasOp: true, max: 14, type: 'overlay' },
+    { id: 6, name: 'Teint / Pâleur', isComp: false, hasColor: false, hasOp: true, max: 11, type: 'overlay' },
+    { id: 7, name: 'Dégâts du Soleil', isComp: false, hasColor: false, hasOp: true, max: 10, type: 'overlay' },
+    { id: 9, name: 'Grains de beauté', isComp: false, hasColor: false, hasOp: true, max: 17, type: 'overlay' },
+    { id: 0, name: 'Taches cutanées', isComp: false, hasColor: false, hasOp: true, max: 23, type: 'overlay' }
+];
+
 window.addEventListener('message', function(event) {
     if (event.data.action === "openSkinChanger") {
         let creatorUI = document.getElementById('creator-container');
         if (creatorUI) creatorUI.classList.add('hidden');
-
+        
         currentGender = event.data.gender;
         isCreatingNew = event.data.isNewCharacter;
         document.getElementById('skinchanger-container').classList.remove('hidden');
@@ -38,14 +53,11 @@ function req(endpoint, data) { fetch(`https://${GetParentResourceName()}/${endpo
 
 function renderTab(tabId) {
     const wrapper = document.getElementById('dynamic-content');
-    document.getElementById('global-color-box').classList.add('hidden');
-    document.getElementById('global-opacity-box').classList.add('hidden');
     wrapper.innerHTML = ""; 
 
     if (tabId === 'genetic') {
         let mIdx = currentSkinData.genetic.shapeMother;
         let fIdx = currentSkinData.genetic.shapeFather;
-        
         wrapper.innerHTML = `
             <div class="parents-preview">
                 <div class="parent-card">
@@ -82,28 +94,36 @@ function renderTab(tabId) {
         `;
     }
     else if (tabId === 'style') {
-        wrapper.innerHTML = `
-            <div class="sub-tabs">
-                <button class="sub-btn active" onclick="loadGrid(2, 'Cheveux', true, true, this)">Cheveux</button>
-                <button class="sub-btn" onclick="loadGrid('eye', 'Yeux', false, false, this)">Yeux</button>
-                <button class="sub-btn" onclick="loadGrid(1, 'Barbe', false, true, this)">Barbe</button>
-                <button class="sub-btn" onclick="loadGrid(22, 'Sourcils', false, true, this)">Sourcils</button>
-                <button class="sub-btn" onclick="loadGrid(10, 'Torse', false, true, this)">Pilosité</button>
-                <button class="sub-btn" onclick="loadGrid(4, 'Maquillage', false, true, this)">Maquillage</button>
-                <button class="sub-btn" onclick="loadGrid(8, 'Lèvres', false, true, this)">Lèvres</button>
-                <button class="sub-btn" onclick="loadGrid(5, 'Blush', false, true, this)">Blush</button>
-                <button class="sub-btn" onclick="loadGrid(3, 'Vieillissement', false, false, this)">Rides</button>
-                <button class="sub-btn" onclick="loadGrid(6, 'Teint / Pâleur', false, false, this)">Teint</button>
-                <button class="sub-btn" onclick="loadGrid(7, 'Soleil', false, false, this)">Soleil</button>
-                <button class="sub-btn" onclick="loadGrid(9, 'Grains', false, false, this)">Grains</button>
-            </div>
-            <div id="grid-container"></div>
-        `;
-        loadGrid(2, 'Cheveux', true, true, document.querySelector('.sub-btn')); 
+        let html = '';
+        appearanceList.forEach(item => {
+            let currentVal = (item.id === 'eye') ? (currentSkinData.colors.eye || 0) : (currentSkinData.overlays[item.id]?.val || 0);
+            
+            html += `<div class="app-card">
+                <div class="app-row">
+                    <span class="app-label">${item.name}</span>
+                    <div class="app-selector">
+                        <button onclick="changeAppItem('${item.id}', -1, ${item.max}, '${item.type}')"><i class="fa-solid fa-chevron-left"></i></button>
+                        <span id="val-app-${item.id}">${currentVal} / ${item.max}</span>
+                        <button onclick="changeAppItem('${item.id}', 1, ${item.max}, '${item.type}')"><i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                </div>`;
+            
+            if (item.hasOp) {
+                let op = (currentSkinData.overlays[item.id]?.op !== undefined) ? currentSkinData.overlays[item.id].op * 100 : 100;
+                html += createSlider("Opacité", `op-${item.id}`, 0, 100, op, `updateOp('${item.id}')`);
+            }
+            if (item.hasColor) {
+                let p = currentSkinData.colors[item.id]?.primary || 0;
+                let s = currentSkinData.colors[item.id]?.secondary || 0;
+                html += createSlider("Couleur Principale", `col-p-${item.id}`, 0, 63, p, `updateCol('${item.id}', ${item.isComp})`);
+                html += createSlider("Reflets", `col-s-${item.id}`, 0, 63, s, `updateCol('${item.id}', ${item.isComp})`);
+            }
+            html += `</div>`;
+        });
+        wrapper.innerHTML = html;
     }
     else if (tabId === 'outfit') {
         wrapper.innerHTML = `
-            <h3 class="section-title">Paquetage de départ</h3>
             <div class="outfit-selector">
                 ${createOutfitCard("basique", "Style Basique")}
                 ${createOutfitCard("classe", "Style Classe")}
@@ -113,25 +133,22 @@ function renderTab(tabId) {
     }
 }
 
+// === FONCTIONS ===
 function changeParent(type, dir) {
     if (type === 'mother') {
         currentSkinData.genetic.shapeMother += dir;
         if (currentSkinData.genetic.shapeMother > 45) currentSkinData.genetic.shapeMother = 0;
         if (currentSkinData.genetic.shapeMother < 0) currentSkinData.genetic.shapeMother = 45;
         currentSkinData.genetic.skinMother = currentSkinData.genetic.shapeMother;
-        
-        let mName = parentsList[currentSkinData.genetic.shapeMother];
-        document.getElementById('name-mother').innerText = mName;
-        document.getElementById('img-mother').src = `assets/skinchanger/parents/${mName}.webp`;
+        document.getElementById('name-mother').innerText = parentsList[currentSkinData.genetic.shapeMother];
+        document.getElementById('img-mother').src = `assets/skinchanger/parents/${parentsList[currentSkinData.genetic.shapeMother]}.webp`;
     } else {
         currentSkinData.genetic.shapeFather += dir;
         if (currentSkinData.genetic.shapeFather > 45) currentSkinData.genetic.shapeFather = 0;
         if (currentSkinData.genetic.shapeFather < 0) currentSkinData.genetic.shapeFather = 45;
         currentSkinData.genetic.skinFather = currentSkinData.genetic.shapeFather;
-
-        let fName = parentsList[currentSkinData.genetic.shapeFather];
-        document.getElementById('name-father').innerText = fName;
-        document.getElementById('img-father').src = `assets/skinchanger/parents/${fName}.webp`;
+        document.getElementById('name-father').innerText = parentsList[currentSkinData.genetic.shapeFather];
+        document.getElementById('img-father').src = `assets/skinchanger/parents/${parentsList[currentSkinData.genetic.shapeFather]}.webp`;
     }
     updateGeneticFetch();
 }
@@ -141,11 +158,10 @@ function updateGenetic() {
     currentSkinData.genetic.skinMix = parseFloat(document.getElementById('gene-skin-mix').value) / 100;
     updateGeneticFetch();
 }
-
 function updateGeneticFetch() { req('updateSkinParents', currentSkinData.genetic); }
 
-function createSlider(label, id, min, max, val, func) { return `<div class="input-group"><label>${label}</label><input type="range" id="${id}" min="${min}" max="${max}" value="${val}" oninput="${func}"></div>`; }
-function createFaceSlider(label, index) { let val = currentSkinData.features[index] || 0.0; return `<div class="input-group"><label>${label}</label><input type="range" min="-100" max="100" value="${val * 100}" oninput="updateFace(${index}, this.value)"></div>`; }
+function createSlider(label, id, min, max, val, func) { return `<div class="input-group"><label><span>${label}</span></label><input type="range" id="${id}" min="${min}" max="${max}" value="${val}" oninput="${func}"></div>`; }
+function createFaceSlider(label, index) { let val = currentSkinData.features[index] || 0.0; return `<div class="input-group"><label><span>${label}</span></label><input type="range" min="-100" max="100" value="${val * 100}" oninput="updateFace(${index}, this.value)"></div>`; }
 function createOutfitCard(id, name) { let active = currentSkinData.outfit === id ? 'active' : ''; return `<div class="outfit-card ${active}" onclick="selectOutfit('${id}', this)"><img src="assets/default.png"><span>${name}</span></div>`; }
 
 function updateFace(index, value) {
@@ -154,83 +170,39 @@ function updateFace(index, value) {
     req('updateFaceFeature', { index: index, value: floatVal });
 }
 
-function loadGrid(id, name, isComponent, hasColors, btnElement) {
-    activeSubCategory = { id: id, isComp: isComponent };
-    if (btnElement) { document.querySelectorAll('.sub-btn').forEach(b => b.classList.remove('active')); btnElement.classList.add('active'); }
-
-    // 1. Gestion des couleurs (Bloc fixe du bas)
-    let colorBox = document.getElementById('global-color-box');
-    if (hasColors) {
-        colorBox.classList.remove('hidden');
-        document.getElementById('global-color-p').value = currentSkinData.colors[id]?.primary || 0;
-        document.getElementById('global-color-s').value = currentSkinData.colors[id]?.secondary || 0;
-    } else {
-        colorBox.classList.add('hidden');
-    }
-
-    // 2. Gestion de l'opacité (Bloc fixe du bas juste au-dessus des couleurs)
-    let opacityContainer = document.getElementById('global-opacity-box');
-    if (!isComponent && id !== 'eye') {
-        opacityContainer.classList.remove('hidden');
-        let op = (currentSkinData.overlays[id]?.op !== undefined) ? currentSkinData.overlays[id].op * 100 : 100;
-        opacityContainer.innerHTML = createSlider(`Opacité du ${name}`, `opacity-${id}`, 0, 100, op, `updateOpacity('${id}')`);
-    } else {
-        opacityContainer.innerHTML = '';
-        opacityContainer.classList.add('hidden');
-    }
-
-    // 3. Génération de la grille d'images (Zone du milieu uniquement)
-    let gridHTML = `<div class="skin-grid">`;
-    let currentVal = (id === 'eye') ? (currentSkinData.colors.eye || 0) : (currentSkinData.overlays[id]?.val || 0);
-    let maxItems = (id === 2) ? 75 : (id === 'eye' ? 32 : 45); 
-
-    for(let i = 0; i < maxItems; i++) {
-        let active = (i === currentVal) ? 'active' : '';
-        let imgPath = (id === 'eye') ? `assets/skinchanger/eye_${i}.png` : `assets/skinchanger/${currentGender}_${id}_${i}.png`;
-        
-        gridHTML += `<div class="skin-item ${active}" id="item-${id}-${i}" onclick="selectGridItem('${id}', ${i}, ${isComponent})">
-            <img src="${imgPath}" onerror="this.src='assets/default.png'"><span>#${i}</span></div>`;
-    }
-    gridHTML += `</div>`;
-    
-    document.getElementById('grid-container').innerHTML = gridHTML;
-}
-
-function selectGridItem(id, val, isComponent) {
-    document.querySelectorAll('.skin-item').forEach(el => el.classList.remove('active'));
-    let activeItem = document.getElementById(`item-${id}-${val}`);
-    if (activeItem) activeItem.classList.add('active');
-
-    if (id === 'eye') {
+function changeAppItem(id, dir, max, type) {
+    let val = 0;
+    if (type === 'eye') {
+        val = (currentSkinData.colors.eye || 0) + dir;
+        if (val > max) val = 0; if (val < 0) val = max;
         currentSkinData.colors.eye = val;
+        document.getElementById(`val-app-${id}`).innerText = `${val} / ${max}`;
         req('updateEyeColor', { value: val });
         return;
     }
 
-    // FIX ANTI-CRASH 'op' : On initialise l'objet s'il n'existe pas encore en mémoire
-    if (!currentSkinData.overlays[id]) {
-        currentSkinData.overlays[id] = { val: 0, op: 1.0 };
-    }
+    if (!currentSkinData.overlays[id]) currentSkinData.overlays[id] = { val: 0, op: 1.0 };
+    val = currentSkinData.overlays[id].val + dir;
+    if (val > max) val = 0; if (val < 0) val = max;
+
     currentSkinData.overlays[id].val = val;
-    req('updateHeadOverlay', { id: id, value: val, opacity: currentSkinData.overlays[id].op, isComponent: isComponent });
+    document.getElementById(`val-app-${id}`).innerText = `${val} / ${max}`;
+    let isComp = (type === 'hair');
+    req('updateHeadOverlay', { id: id, value: val, opacity: currentSkinData.overlays[id].op, isComponent: isComp });
 }
 
-function updateOpacity(id) {
-    let op = parseFloat(document.getElementById(`opacity-${id}`).value) / 100;
-    
-    // FIX ANTI-CRASH : Sécurité au cas où on touche au slider d'opacité avant de cliquer sur un item
-    if (!currentSkinData.overlays[id]) {
-        currentSkinData.overlays[id] = { val: 0, op: 1.0 };
-    }
+function updateOp(id) {
+    let op = parseFloat(document.getElementById(`op-${id}`).value) / 100;
+    if (!currentSkinData.overlays[id]) currentSkinData.overlays[id] = { val: 0, op: 1.0 };
     currentSkinData.overlays[id].op = op;
     req('updateHeadOverlay', { id: id, value: currentSkinData.overlays[id].val, opacity: op, isComponent: false });
 }
 
-function applySkinColor() {
-    let p = parseInt(document.getElementById('global-color-p').value);
-    let s = parseInt(document.getElementById('global-color-s').value);
-    currentSkinData.colors[activeSubCategory.id] = { primary: p, secondary: s };
-    req('updateSkinColor', { id: activeSubCategory.id, isComponent: activeSubCategory.isComp, primary: p, secondary: s });
+function updateCol(id, isComp) {
+    let p = parseInt(document.getElementById(`col-p-${id}`).value);
+    let s = parseInt(document.getElementById(`col-s-${id}`).value);
+    currentSkinData.colors[id] = { primary: p, secondary: s };
+    req('updateSkinColor', { id: id, isComponent: isComp, primary: p, secondary: s });
 }
 
 function selectOutfit(style, cardElement) {
@@ -241,6 +213,7 @@ function selectOutfit(style, cardElement) {
 }
 
 function changeCam(type) { req('changeSkinCam', { camType: type }); }
+function zoomCam(dir) { req('zoomCam', { dir: dir }); }
 function rotateCam(dir) { req('rotateCam', { dir: dir }); }
 function saveSkin() {
     document.getElementById('skinchanger-container').classList.add('hidden');

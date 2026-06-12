@@ -68,29 +68,33 @@
         <div class="skin-content-wrapper" id="dynamic-content">
             </div>
 
-        <div class="bottom-controls-container">
-            <div id="global-opacity-box" class="hidden">
-                </div>
+        <button class="btn-save-skin" onclick="saveSkin()">Valider mon personnage</button>
+    </div>
+
+    <div class="camera-sidebar">
+        <div class="skin-header">
+            <h1>Caméra</h1>
+            <p>Outils de visualisation</p>
+        </div>
+        <div class="cam-btn-group">
+            <button class="cam-btn" onclick="changeCam('eyes')"><i class="fa-solid fa-eye"></i> Focus Yeux</button>
+            <button class="cam-btn" onclick="changeCam('head')"><i class="fa-solid fa-user"></i> Focus Visage</button>
+            <button class="cam-btn" onclick="changeCam('torso')"><i class="fa-solid fa-shirt"></i> Focus Torse</button>
+            <button class="cam-btn" onclick="changeCam('legs')"><i class="fa-solid fa-socks"></i> Focus Jambes</button>
+            <button class="cam-btn" onclick="changeCam('feet')"><i class="fa-solid fa-shoe-prints"></i> Focus Pieds</button>
             
-            <div id="global-color-box" class="hidden">
-                <div class="input-group">
-                    <label>Couleur Principale</label>
-                    <input type="range" id="global-color-p" min="0" max="63" value="0" oninput="applySkinColor()">
-                </div>
-                <div class="input-group">
-                    <label>Reflets / Variante</label>
-                    <input type="range" id="global-color-s" min="0" max="63" value="0" oninput="applySkinColor()">
-                </div>
+            <p style="color: var(--text-muted); font-size: 10px; text-transform: uppercase; margin: 10px 0 0 0; font-weight: bold; text-align: center;">Zoom</p>
+            <div class="cam-row">
+                <button class="cam-btn" onclick="zoomCam('in')"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
+                <button class="cam-btn" onclick="zoomCam('out')"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
+            </div>
+
+            <p style="color: var(--text-muted); font-size: 10px; text-transform: uppercase; margin: 10px 0 0 0; font-weight: bold; text-align: center;">Rotation</p>
+            <div class="cam-row">
+                <button class="cam-btn" onclick="rotateCam('left')"><i class="fa-solid fa-rotate-left"></i></button>
+                <button class="cam-btn" onclick="rotateCam('right')"><i class="fa-solid fa-rotate-right"></i></button>
             </div>
         </div>
-
-        <div class="cam-controls">
-            <button class="btn-icon" onclick="rotateCam('left')"><i class="fa-solid fa-rotate-left"></i></button>
-            <button onclick="changeCam('head')"><i class="fa-solid fa-user"></i> Visage</button>
-            <button onclick="changeCam('body')"><i class="fa-solid fa-child"></i> Corps</button>
-            <button class="btn-icon" onclick="rotateCam('right')"><i class="fa-solid fa-rotate-right"></i></button>
-        </div>
-        <button class="btn-save-skin" onclick="saveSkin()">Valider mon personnage</button>
     </div>
 </div>
 

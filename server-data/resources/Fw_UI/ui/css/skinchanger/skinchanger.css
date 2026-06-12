@@ -5,17 +5,23 @@
     width: 100vw;
     height: 100vh;
     display: flex;
+    justify-content: space-between;
+    align-items: center;
     font-family: 'Poppins', sans-serif;
     user-select: none;
     z-index: 100;
-    padding: 20px;
+    padding: 30px;
     box-sizing: border-box;
+    background: transparent !important;
+    /* Aucun fond noir en arrière-plan */
 }
 
-.skinchanger-sidebar {
-    width: 380px;
-    height: calc(100vh - 40px);
+/* MENUS GAUCHE ET DROITE IDENTIQUES ET ÉPURÉS */
+.skinchanger-sidebar,
+.camera-sidebar {
+    height: calc(100vh - 60px);
     background: var(--black-60);
+    /* TA COULEUR D'ORIGINE */
     border: 1px solid var(--black2-20);
     border-radius: 8px;
     display: flex;
@@ -23,6 +29,15 @@
     overflow: hidden;
 }
 
+.skinchanger-sidebar {
+    width: 380px;
+}
+
+.camera-sidebar {
+    width: 280px;
+}
+
+/* EN-TÊTES ET ONGLETS */
 .skin-header {
     padding: 25px;
     background: rgba(0, 0, 0, 0.2);
@@ -31,7 +46,7 @@
 
 .skin-header h1 {
     margin: 0;
-    font-size: 22px;
+    font-size: 20px;
     color: #fff;
     text-transform: uppercase;
     font-weight: 800;
@@ -68,7 +83,7 @@
     background: rgba(255, 255, 255, 0.05);
 }
 
-/* CONTENEUR DE CONTENU DÉFILANT */
+/* CONTENEUR DE GAUCHE (DÉFILANT) */
 .skin-content-wrapper {
     flex: 1;
     padding: 20px 25px;
@@ -82,31 +97,23 @@
     width: 0px;
 }
 
-/* RECADRAGE ET CENTRAGE SYMÉTRIQUE */
-.section-title,
-.parents-preview,
-.outfit-selector,
-.input-group,
-.sub-tabs,
-.skin-grid {
-    width: 100%;
-    box-sizing: border-box;
-    margin: 0 0 15px 0;
-}
-
+/* TITRES DE SECTION */
 .section-title {
     font-size: 12px;
     color: #fff;
     text-transform: uppercase;
     padding-left: 10px;
     border-left: 3px solid var(--accent-green);
-    margin-bottom: 12px;
+    margin: 0 0 15px 0;
 }
 
-/* PORTRAITS GENERATION */
+/* L'AFFICHAGE DES PARENTS (RÉPARÉ) */
 .parents-preview {
     display: flex;
     gap: 10px;
+    margin-bottom: 15px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .parent-card {
@@ -157,7 +164,13 @@
     text-transform: uppercase;
 }
 
-/* SLIDERS DE COULEUR / MORPHOLOGIE */
+/* SLIDERS */
+.input-group { 
+    width: 90%; /* Réduit la largeur pour forcer l'espace sur les côtés */
+    margin: 0 auto 15px auto; /* Centre parfaitement le slider */
+    box-sizing: border-box; 
+}
+
 .input-group label {
     display: flex;
     justify-content: space-between;
@@ -169,86 +182,70 @@
 }
 
 .input-group input[type=range] {
-    width: 100%;
-    height: 5px;
-    background: rgba(255, 255, 255, 0.1);
-    margin: 0;
-    border-radius: 3px;
-    outline: none;
-    -webkit-appearance: none;
-    accent-color: var(--accent-green);
+    width: 100%; 
+    height: 5px; 
+    background: rgba(255,255,255,0.1); 
+    margin: 5px 0 0 0; /* Décolle un peu la barre du texte au-dessus */
+    border-radius: 3px; 
+    outline: none; 
+    -webkit-appearance: none; 
+    accent-color: var(--accent-green); 
     box-sizing: border-box;
 }
 
-/* BOUTONS SOUS-CATÉGORIES SUR 2 LIGNES PARFAITES SANS SCROLL */
-.sub-tabs {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-    margin-bottom: 15px;
-    width: 100%;
-}
-
-.sub-btn {
-    flex: 1 1 22%;
-    padding: 8px 5px;
-    background: rgba(255, 255, 255, 0.05);
+/* LISTES D'APPARENCE (Cartes propres) */
+.app-card {
+    background: rgba(0, 0, 0, 0.25);
     border: 1px solid var(--black2-20);
-    color: var(--text-muted);
-    border-radius: 4px;
-    font-size: 10px;
-    cursor: pointer;
-    text-align: center;
-    transition: 0.2s;
-}
-
-.sub-btn.active,
-.sub-btn:hover {
-    background: rgba(27, 171, 113, 0.15);
-    border-color: var(--accent-green);
-    color: #fff;
-}
-
-/* GRILLE D'IMAGES FLUIDE */
-.skin-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    grid-auto-rows: 120px;
-    width: 100%;
-    box-sizing: border-box;
-    margin-bottom: 5px;
-}
-
-.skin-item {
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid var(--black2-20);
-    border-radius: 4px;
-    text-align: center;
-    cursor: pointer;
-    transition: 0.2s;
+    border-radius: 6px;
+    padding: 15px;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    gap: 12px;
+    margin-bottom: 12px;
 }
 
-.skin-item.active,
-.skin-item:hover {
-    border-color: var(--accent-green);
-}
-
-.skin-item img {
-    flex: 1;
+.app-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     width: 100%;
-    object-fit: contain;
-    background: rgba(0, 0, 0, 0.1);
 }
 
-.skin-item span {
-    padding: 5px;
-    font-size: 10px;
+.app-label {
+    font-size: 11px;
     color: #fff;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.app-selector {
+    display: flex;
+    align-items: center;
     background: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--black2-20);
+    border-radius: 4px;
+}
+
+.app-selector button {
+    background: none;
+    border: none;
+    color: #fff;
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.app-selector button:hover {
+    color: var(--accent-green);
+}
+
+.app-selector span {
+    font-size: 11px;
+    width: 45px;
+    text-align: center;
+    color: #fff;
+    font-weight: bold;
 }
 
 /* TENUES */
@@ -259,7 +256,7 @@
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid var(--black2-20);
     border-radius: 4px;
-    padding: 10px;
+    padding: 12px;
     cursor: pointer;
     transition: 0.2s;
     margin-bottom: 10px;
@@ -272,8 +269,8 @@
 }
 
 .outfit-card img {
-    width: 60px;
-    height: 60px;
+    width: 45px;
+    height: 45px;
     object-fit: contain;
     border-radius: 4px;
 }
@@ -285,63 +282,73 @@
     text-transform: uppercase;
 }
 
-/* ZONE TECHNIQUE FIXÉE EN BAS (Opacité + Couleurs) */
-.bottom-controls-container {
-    background: rgba(0, 0, 0, 0.2);
-    border-top: 1px solid var(--black2-20);
-    padding: 15px 25px 0 25px;
-    box-sizing: border-box;
-    width: 100%;
-}
-
-#global-opacity-box {
-    width: 100%;
-}
-
-#global-color-box {
-    width: 100%;
-    margin-top: 10px;
-}
-
-/* BOUTONS CAMÉRA ET ENREGISTREMENT */
-.cam-controls {
-    display: flex;
-    gap: 8px;
-    padding: 15px 25px;
-    background: rgba(0, 0, 0, 0.2);
-    box-sizing: border-box;
-    width: 100%;
-}
-
-.cam-controls button {
+/* ====== LE NOUVEAU MENU CAMERA (Beau et propre) ====== */
+.cam-btn-group {
     flex: 1;
-    padding: 12px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--black2-20);
-    color: #fff;
+    padding: 20px 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+
+.cam-section-label {
     font-size: 11px;
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding-left: 8px;
+    border-left: 2px solid var(--accent-green);
+    margin: 10px 0 5px 0;
+}
+
+.cam-btn {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--black2-20);
+    color: var(--text-muted);
+    padding: 12px;
+    font-size: 11px;
+    font-weight: 600;
     text-transform: uppercase;
     cursor: pointer;
     border-radius: 4px;
     transition: 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-.cam-controls button:hover {
+.cam-btn:hover {
     border-color: var(--accent-green);
+    color: #fff;
+    background: rgba(255, 255, 255, 0.05);
 }
 
-.cam-controls .btn-icon {
-    flex: 0.3;
-    font-size: 14px;
-    background: rgba(0, 0, 0, 0.4);
+.cam-btn i {
+    color: var(--accent-green);
+    font-size: 13px;
+    width: 16px;
+    text-align: center;
 }
 
+.cam-row {
+    display: flex;
+    gap: 8px;
+}
+
+.cam-row .cam-btn {
+    flex: 1;
+    justify-content: center;
+}
+
+/* BOUTON VALIDATION */
 .btn-save-skin {
     background: var(--accent-green);
     color: #000;
     border: none;
-    padding: 20px;
-    font-size: 14px;
+    padding: 22px;
+    font-size: 13px;
     font-weight: 800;
     text-transform: uppercase;
     cursor: pointer;
@@ -350,6 +357,5 @@
 }
 
 .btn-save-skin:hover {
-    filter: brightness(1.1);
-    letter-spacing: 1px;
+    filter: brightness(1.15);
 }
