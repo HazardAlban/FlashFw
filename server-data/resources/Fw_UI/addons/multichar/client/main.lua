@@ -40,12 +40,12 @@ AddEventHandler('multichar:open', function(characters, maxSlots)
     })
 end)
 
+-- Remplace uniquement le Callback 'previewCharacter' dans ton client/main.lua par ceci :
+
 RegisterNUICallback('previewCharacter', function(data, cb)
-    -- Sécurisation du tostring pour empêcher le crash de concaténation de nil
-    print("Preview du personnage ID : " .. tostring(data.id or "Inconnu"))
-    
     local ped = PlayerPedId()
-    local model = (data.sex == 'm' or data.sex == 'M') and `mp_m_freemode_01` or `mp_f_freemode_01`
+    local isMale = (data.sex == 'm' or data.sex == 'M')
+    local model = isMale and `mp_m_freemode_01` or `mp_f_freemode_01`
     
     if GetEntityModel(ped) ~= model then
         RequestModel(model)
@@ -59,12 +59,9 @@ RegisterNUICallback('previewCharacter', function(data, cb)
     if data.skin and data.skin ~= "" and data.skin ~= "null" then
         local skin = json.decode(data.skin)
         if skin then
-            if skin.genetic then
-                SetPedHeadBlendData(ped, skin.genetic.shapeMother or 0, skin.genetic.shapeFather or 0, 0, skin.genetic.skinMother or 0, skin.genetic.skinFather or 0, 0, (skin.genetic.shapeMix or 0.5) + 0.0, (skin.genetic.skinMix or 0.5) + 0.0, 0, false)
-            end
-            if skin.features then
-                for k, v in pairs(skin.features) do SetPedFaceFeature(ped, tonumber(k), tonumber(v) + 0.0) end
-            end
+            -- Morphologie, traits, couleurs et maquillages (déjà présents)
+            if skin.genetic then SetPedHeadBlendData(ped, skin.genetic.shapeMother or 0, skin.genetic.shapeFather or 0, 0, skin.genetic.skinMother or 0, skin.genetic.skinFather or 0, 0, (skin.genetic.shapeMix or 0.5) + 0.0, (skin.genetic.skinMix or 0.5) + 0.0, 0, false) end
+            if skin.features then for k, v in pairs(skin.features) do SetPedFaceFeature(ped, tonumber(k), tonumber(v) + 0.0) end end
             if skin.overlays then
                 for k, v in pairs(skin.overlays) do
                     local id = tonumber(k)
@@ -86,10 +83,47 @@ RegisterNUICallback('previewCharacter', function(data, cb)
                     end
                 end
             end
+            
+            -- 🌟 NOUVEAU : APPLICATION DE LA TENUE
+            if skin.outfit then
+                if skin.outfit == 'basique' then
+                    if isMale then
+                        SetPedComponentVariation(ped, 3, 0, 0, 2) SetPedComponentVariation(ped, 4, 4, 0, 2)
+                        SetPedComponentVariation(ped, 6, 1, 0, 2) SetPedComponentVariation(ped, 11, 1, 0, 2)
+                    else
+                        SetPedComponentVariation(ped, 3, 15, 0, 2) SetPedComponentVariation(ped, 4, 4, 0, 2)
+                        SetPedComponentVariation(ped, 6, 1, 0, 2) SetPedComponentVariation(ped, 11, 2, 0, 2)
+                    end
+                elseif skin.outfit == 'classe' then
+                    if isMale then
+                        SetPedComponentVariation(ped, 3, 4, 0, 2) SetPedComponentVariation(ped, 4, 10, 0, 2)
+                        SetPedComponentVariation(ped, 6, 10, 0, 2) SetPedComponentVariation(ped, 11, 10, 0, 2)
+                    else
+                        SetPedComponentVariation(ped, 3, 15, 0, 2) SetPedComponentVariation(ped, 4, 6, 0, 2)
+                        SetPedComponentVariation(ped, 6, 6, 0, 2) SetPedComponentVariation(ped, 11, 6, 0, 2)
+                    end
+                elseif skin.outfit == 'rue' then
+                    if isMale then
+                        SetPedComponentVariation(ped, 3, 1, 0, 2) SetPedComponentVariation(ped, 4, 5, 2, 2)
+                        SetPedComponentVariation(ped, 6, 5, 0, 2) SetPedComponentVariation(ped, 11, 5, 0, 2)
+                    else
+                        SetPedComponentVariation(ped, 3, 15, 0, 2) SetPedComponentVariation(ped, 4, 5, 0, 2)
+                        SetPedComponentVariation(ped, 6, 5, 0, 2) SetPedComponentVariation(ped, 11, 5, 0, 2)
+                    end
+                else
+                    -- Caleçon / Sous-vêtements par défaut
+                    SetPedComponentVariation(ped, 3, 15, 0, 2)
+                    SetPedComponentVariation(ped, 4, isMale and 61 or 15, 0, 2)
+                    SetPedComponentVariation(ped, 6, 34, 0, 2)
+                    SetPedComponentVariation(ped, 8, 15, 0, 2)
+                    SetPedComponentVariation(ped, 11, 15, 0, 2)
+                end
+            end
         end
     else
+        -- Sous-vêtements si aucune donnée
         SetPedComponentVariation(ped, 3, 15, 0, 2)
-        SetPedComponentVariation(ped, 4, (data.sex == 'm' or data.sex == 'M') and 61 or 15, 0, 2)
+        SetPedComponentVariation(ped, 4, isMale and 61 or 15, 0, 2)
         SetPedComponentVariation(ped, 6, 34, 0, 2)
         SetPedComponentVariation(ped, 8, 15, 0, 2)
         SetPedComponentVariation(ped, 11, 15, 0, 2)
