@@ -1,13 +1,12 @@
+-- Fw_UI/addons/skinchanger/client/main.lua
+
 local isSkinChangerOpen = false
 local skinCam = nil
 local camOffsetZ = 0.6
 local camDist = 1.2
 local fixedForward = nil 
 
-RegisterCommand('devskin', function()
-    TriggerEvent('skinchanger:init', 'm', false) 
-end, false)
-
+-- Déclencheur depuis le creator
 RegisterNetEvent('skinchanger:init')
 AddEventHandler('skinchanger:init', function(sex, isNewCharacter)
     if isSkinChangerOpen then return end
@@ -26,8 +25,15 @@ AddEventHandler('skinchanger:init', function(sex, isNewCharacter)
         SetEntityCoordsNoOffset(ped, -1042.48, -2745.57, 21.36, false, false, false, true)
         SetEntityHeading(ped, 330.0)
         
-        -- SÉCURITÉ ABSOLUE : INITIALISE LA TÊTE POUR QUE LE MAQUILLAGE S'AFFICHE
+        -- Initialisation obligatoire pour afficher les maquillages et barbes
         SetPedHeadBlendData(ped, 0, 0, 0, 0, 0, 0, 0.5, 0.5, 0.0, false)
+        
+        -- Caleçon / Sous-vêtements
+        SetPedComponentVariation(ped, 3, 15, 0, 2)
+        SetPedComponentVariation(ped, 4, (sex == 'm' or sex == 'M') and 61 or 15, 0, 2)
+        SetPedComponentVariation(ped, 6, 34, 0, 2)
+        SetPedComponentVariation(ped, 8, 15, 0, 2)
+        SetPedComponentVariation(ped, 11, 15, 0, 2)
     end
 
     FreezeEntityPosition(ped, true)
@@ -53,6 +59,7 @@ AddEventHandler('skinchanger:init', function(sex, isNewCharacter)
     })
 end)
 
+-- CAMERA SYSTEM
 local function UpdateCameraPosition()
     if not skinCam then return end
     local ped = PlayerPedId()
@@ -91,14 +98,12 @@ end)
 RegisterNUICallback('rotateCam', function(data, cb)
     local ped = PlayerPedId()
     local heading = GetEntityHeading(ped)
-    if data.dir == 'left' then
-        SetEntityHeading(ped, heading + 15.0)
-    else
-        SetEntityHeading(ped, heading - 15.0)
-    end
+    if data.dir == 'left' then SetEntityHeading(ped, heading + 15.0)
+    else SetEntityHeading(ped, heading - 15.0) end
     cb('ok')
 end)
 
+-- MODIFICATIONS PHYSIQUES
 RegisterNUICallback('updateSkinParents', function(data, cb)
     SetPedHeadBlendData(PlayerPedId(), tonumber(data.shapeMother), tonumber(data.shapeFather), 0, tonumber(data.skinMother), tonumber(data.skinFather), 0, tonumber(data.shapeMix) + 0.0, tonumber(data.skinMix) + 0.0, 0, false)
     cb('ok')
@@ -175,10 +180,17 @@ RegisterNUICallback('applyPresetOutfit', function(data, cb)
     cb('ok')
 end)
 
+-- SAUVEGARDE ET FIN
 RegisterNUICallback('saveSkinFinal', function(data, cb)
+    TriggerServerEvent('skinchanger:saveSkinFinal', data, data.isNewCharacter)
+    cb('ok')
+end)
+
+RegisterNetEvent('skinchanger:finishSpawn')
+AddEventHandler('skinchanger:finishSpawn', function()
     SetNuiFocus(false, false)
     if skinCam then DestroyCam(skinCam, false) skinCam = nil end
+    RenderScriptCams(false, true, 500, true, true)
+    FreezeEntityPosition(PlayerPedId(), false)
     isSkinChangerOpen = false
-    TriggerServerEvent('skinchanger:saveFinalSkin', data.skin, data.isNewCharacter)
-    cb('ok')
 end)

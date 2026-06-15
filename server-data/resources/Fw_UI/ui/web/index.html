@@ -5,8 +5,29 @@
     <link rel="stylesheet" href="../css/global.css">
     <link rel="stylesheet" href="../css/creator/creator.css">
     <link rel="stylesheet" href="../css/skinchanger/skinchanger.css">
+    <link rel="stylesheet" href="../css/multichar/multichar.css">
 </head>
 <body>
+<div id="multichar-container" class="hidden">
+    <div class="multichar-sidebar">
+        <div class="skin-header">
+            <h1>Personnages</h1>
+            <p>Sélectionnez votre identité</p>
+        </div>
+        <div class="char-list" id="char-list">
+            </div>
+        <button id="btn-play-char" class="btn-save-skin" onclick="playCharacter()" style="display:none;">Rejoindre la ville</button>
+    </div>
+
+    <div class="camera-sidebar" id="char-info-sidebar" style="display:none;">
+        <div class="skin-header">
+            <h1>Dossier Citoyen</h1>
+            <p>Informations du réseau</p>
+        </div>
+        <div class="char-info-content" id="char-info-content">
+            </div>
+    </div>
+</div>
     <div id="creator-container" class="hidden">
         <div class="creator-box">
             <div class="creator-header">
@@ -99,7 +120,7 @@
 </div>
 
     <script src="../js/skinchanger/skinchanger.js"></script>
-
+    <script src="../js/multichar/multichar.js"></script>
     <script src="../js/global.js"></script>
     <script src="../js/creator/creator.js"></script>
 </body>

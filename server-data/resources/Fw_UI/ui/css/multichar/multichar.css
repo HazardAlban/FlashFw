@@ -1,0 +1,61 @@
+/* Fw_UI/ui/css/multichar/multichar.css */
+
+#multichar-container {
+    position: absolute; top: 0; left: 0; width: 100vw; height: 100vh;
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: 'Poppins', sans-serif; user-select: none; z-index: 150;
+    padding: 30px; box-sizing: border-box;
+    background: transparent !important;
+}
+
+/* STRUCTURE EN SIDEBAR STRICTEMENT IDENTIQUE AU SKINCHANGER */
+.multichar-sidebar, .camera-sidebar {
+    height: calc(100vh - 60px); 
+    background: var(--black-60); 
+    border: 1px solid var(--black2-20); 
+    border-radius: 8px; display: flex; flex-direction: column; overflow: hidden;
+}
+
+.multichar-sidebar { width: 380px; }
+.camera-sidebar { width: 280px; }
+
+.char-list { 
+    flex: 1; padding: 20px 25px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; box-sizing: border-box;
+}
+.char-list::-webkit-scrollbar { width: 0px; }
+
+/* CARTES DE SÉLECTION */
+.char-card {
+    background: rgba(0,0,0,0.3); border: 1px solid var(--black2-20); border-radius: 4px;
+    padding: 20px; cursor: pointer; transition: 0.2s; box-sizing: border-box; width: 100%;
+}
+.char-card:hover, .char-card.active { 
+    border-color: var(--accent-green); background: rgba(27, 171, 113, 0.05); 
+}
+
+.char-name { color: #fff; font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+.char-info { color: var(--text-muted); font-size: 11px; margin-top: 5px; font-weight: 600; }
+
+/* EMPLACEMENT LIBRE */
+.empty-slot {
+    border: 1px dashed var(--black2-20); display: flex; flex-direction: column; 
+    align-items: center; justify-content: center; opacity: 0.6; padding: 25px;
+}
+.empty-slot:hover { opacity: 1; border-style: solid; }
+.empty-slot .char-name { display: flex; align-items: center; gap: 10px; color: var(--accent-green); }
+
+/* CONTENU DOSSIER CITOYEN (PANNEAU DROIT) */
+.char-info-content {
+    padding: 25px; display: flex; flex-direction: column; gap: 15px; box-sizing: border-box; width: 100%;
+}
+.info-group {
+    width: 100%; background: rgba(0,0,0,0.25); border: 1px solid var(--black2-20); 
+    padding: 15px; border-radius: 6px; box-sizing: border-box;
+}
+.info-group label {
+    display: block; font-size: 10px; color: var(--text-muted); text-transform: uppercase; 
+    font-weight: 600; margin-bottom: 5px; letter-spacing: 0.5px;
+}
+.info-group span { display: block; font-size: 13px; color: #fff; font-weight: bold; }
+.info-group.finance { border-color: var(--accent-green); background: rgba(27, 171, 113, 0.05); }
+.info-group.finance span { color: var(--accent-green); }
