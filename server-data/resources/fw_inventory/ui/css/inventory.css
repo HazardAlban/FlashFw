@@ -1,0 +1,704 @@
+/* ============================================================
+   fw_inventory | ui/css/inventory.css — redesign v3
+   Style : dark slate propre, inspiré screen 2, moins sombre
+   ============================================================ */
+
+/* ─── LAYOUT PRINCIPAL ──────────────────────────────────────── */
+#inventory-root {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    padding: 18px 20px;
+    gap: 0;
+    pointer-events: none;
+}
+
+#inventory-root.open { pointer-events: all; }
+
+/* ─── PANNEAUX GAUCHE & DROITE ──────────────────────────────── */
+.inv-panel {
+    width: 320px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-panel);
+    border: 1px solid var(--border-panel);
+    border-radius: var(--panel-radius);
+    overflow: hidden;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.06),
+        0 20px 60px rgba(0,0,0,0.65);
+}
+
+/* ─── EN-TÊTE DE PANNEAU ────────────────────────────────────── */
+.panel-header {
+    padding: 14px 16px 12px;
+    background: var(--bg-header);
+    border-bottom: 1px solid var(--border-subtle);
+    flex-shrink: 0;
+}
+
+.panel-header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2px;
+}
+
+.panel-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--text-main);
+}
+
+.panel-tag {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--accent);
+    background: var(--accent-dim);
+    border: 1px solid var(--accent-border);
+    padding: 3px 8px;
+    border-radius: 4px;
+}
+
+/* Barre de poids */
+.weight-bar-wrap { margin-top: 11px; }
+
+.weight-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 9px;
+    font-weight: 500;
+    color: var(--text-muted);
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.weight-bar {
+    height: 2px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.weight-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), #18e080);
+    border-radius: 2px;
+    transition: width 0.4s ease, background 0.3s ease;
+    box-shadow: 0 0 5px var(--accent-glow);
+}
+
+.weight-fill.warn { background: linear-gradient(90deg, var(--warning), #f0c040); }
+.weight-fill.full { background: linear-gradient(90deg, var(--danger), #f07070); }
+
+/* ─── SOUS-TITRE POIDS (dans la grille contexte vide) ───────── */
+#context-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    gap: 10px;
+    color: var(--text-dim);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+#context-empty i { font-size: 28px; opacity: .35; }
+
+/* ─── GRILLE DE SLOTS ───────────────────────────────────────── */
+.slots-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 3px;
+    padding: 10px;
+    overflow-y: auto;
+    flex: 1;
+    align-content: start;
+}
+
+.slots-grid.cols-4 {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+/* ─── SLOT INDIVIDUEL ───────────────────────────────────────── */
+.inv-slot {
+    aspect-ratio: 1;
+    background: var(--bg-slot);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--slot-radius);
+    position: relative;
+    cursor: pointer;
+    transition: border-color var(--transition), background var(--transition), box-shadow var(--transition);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.inv-slot:hover {
+    border-color: var(--border-mid);
+    background: var(--bg-slot-hover);
+}
+
+.inv-slot.has-item:hover {
+    border-color: var(--accent-border);
+    background: var(--accent-dim);
+    box-shadow: 0 0 10px var(--accent-glow);
+}
+
+.inv-slot.drag-over {
+    border-color: var(--accent);
+    background: var(--accent-dim);
+    box-shadow: 0 0 14px var(--accent-glow);
+}
+
+.inv-slot.drag-over-invalid {
+    border-color: var(--danger);
+    background: rgba(232, 85, 85, 0.09);
+}
+
+.inv-slot.dragging {
+    opacity: 0.25;
+    transform: scale(0.92);
+}
+
+.inv-slot.selected {
+    border-color: var(--accent);
+    background: var(--accent-dim);
+    box-shadow: 0 0 12px var(--accent-glow);
+}
+
+/* Numéro de slot */
+.slot-number {
+    position: absolute;
+    top: 4px; left: 5px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 9px;
+    font-weight: 600;
+    color: var(--text-dim);
+    line-height: 1;
+    letter-spacing: .4px;
+}
+
+/* Image */
+.slot-img {
+    width: 58%;
+    height: 58%;
+    object-fit: contain;
+    pointer-events: none;
+    filter: drop-shadow(0 2px 5px rgba(0,0,0,0.75));
+}
+
+/* Icône fallback */
+.slot-icon {
+    font-size: 18px;
+    color: var(--text-muted);
+    pointer-events: none;
+}
+
+/* Quantité */
+.slot-amount {
+    position: absolute;
+    bottom: 4px; right: 5px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-main);
+    line-height: 1;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.95);
+}
+
+/* Barre de durabilité */
+.slot-durability {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: rgba(255,255,255,0.04);
+}
+
+.slot-durability-fill {
+    height: 100%;
+    background: var(--accent);
+    transition: width 0.3s ease, background 0.3s ease;
+}
+
+.slot-durability-fill.medium { background: var(--warning); }
+.slot-durability-fill.low    { background: var(--danger); }
+
+/* Badge arme */
+.slot-weapon-badge {
+    position: absolute;
+    top: 3px; right: 4px;
+    font-size: 7px;
+    color: var(--accent);
+    opacity: .65;
+}
+
+/* ─── LABEL NOM ITEM sous le slot (optionnel) ───────────────── */
+.slot-label {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: rgba(10, 12, 22, 0.82);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 8.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    color: var(--text-sub);
+    text-align: center;
+    padding: 2px 2px 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ─── HOTBAR ────────────────────────────────────────────────── */
+.hotbar-row {
+    padding: 8px 10px;
+    background: rgba(12, 14, 24, 0.50);
+    border-top: 1px solid var(--border-subtle);
+    display: flex;
+    gap: 3px;
+    flex-shrink: 0;
+}
+
+.hotbar-slot {
+    flex: 1;
+    aspect-ratio: 1;
+    background: var(--bg-slot);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--slot-radius);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: border-color var(--transition), background var(--transition);
+}
+
+.hotbar-slot:hover,
+.hotbar-slot.drag-over {
+    border-color: var(--accent-border);
+    background: var(--accent-dim);
+}
+
+.hotbar-slot.has-item:hover {
+    border-color: var(--accent-border);
+    background: var(--accent-dim);
+    box-shadow: 0 0 8px var(--accent-glow);
+}
+
+.hotbar-key {
+    position: absolute;
+    top: 3px; left: 4px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 8px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: .3px;
+    opacity: .8;
+}
+
+/* ─── COLONNE CENTRE ────────────────────────────────────────── */
+#inv-center {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 14px 20px;
+    gap: 12px;
+    pointer-events: none;
+}
+
+#ped-area {
+    flex: 1;
+    width: 100%;
+    pointer-events: none;
+}
+
+/* ─── CASH DISPLAY ──────────────────────────────────────────── */
+#cash-display {
+    pointer-events: all;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    background: rgba(15, 18, 30, 0.92);
+    border: 1px solid var(--accent-border);
+    border-radius: 7px;
+    padding: 8px 16px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 0 16px var(--accent-glow);
+}
+
+#cash-display i {
+    color: var(--accent);
+    font-size: 12px;
+}
+
+#cash-amount {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 1px;
+}
+
+/* ─── BOUTONS D'ACTION ──────────────────────────────────────── */
+#action-buttons {
+    pointer-events: all;
+    display: flex;
+    gap: 6px;
+    width: 100%;
+    max-width: 300px;
+}
+
+.action-btn {
+    flex: 1;
+    padding: 12px 6px;
+    background: rgba(18, 22, 36, 0.92);
+    border: 1px solid var(--border-panel);
+    border-radius: 8px;
+    color: var(--text-sub);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all var(--transition);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    backdrop-filter: blur(12px);
+}
+
+.action-btn i {
+    font-size: 16px;
+    transition: color var(--transition);
+}
+
+.action-btn:hover {
+    border-color: var(--accent-border);
+    background: var(--accent-dim);
+    color: var(--text-main);
+    box-shadow: 0 0 16px var(--accent-glow);
+}
+
+.action-btn:hover i { color: var(--accent); }
+.action-btn:active  { transform: translateY(1px); }
+
+.action-btn.active {
+    border-color: var(--accent);
+    background: var(--accent-dim);
+    color: var(--text-main);
+    box-shadow: 0 0 16px var(--accent-glow);
+}
+
+.action-btn.active i { color: var(--accent); }
+
+.action-btn.danger:hover {
+    border-color: rgba(232, 85, 85, 0.38);
+    background: rgba(232, 85, 85, 0.09);
+    box-shadow: 0 0 16px rgba(232,85,85,0.18);
+}
+
+.action-btn.danger:hover i { color: var(--danger); }
+
+/* ─── TOOLTIP ───────────────────────────────────────────────── */
+#inv-tooltip {
+    position: fixed;
+    z-index: 9999;
+    background: rgba(16, 19, 30, 0.98);
+    border: 1px solid var(--border-mid);
+    border-top: 1px solid var(--accent-border);
+    border-radius: 9px;
+    padding: 12px 14px;
+    min-width: 180px;
+    max-width: 240px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.12s ease;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 14px 44px rgba(0,0,0,0.72);
+}
+
+#inv-tooltip.show { opacity: 1; }
+
+.tooltip-name {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-main);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.tooltip-desc {
+    font-size: 10px;
+    font-weight: 400;
+    color: var(--text-sub);
+    line-height: 1.55;
+    margin-bottom: 8px;
+}
+
+.tooltip-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.tooltip-meta-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 9px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+}
+
+.tooltip-meta-row span:last-child {
+    color: var(--accent);
+    font-weight: 600;
+}
+
+.tooltip-durability {
+    margin-top: 8px;
+    height: 2px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 2px;
+}
+
+.tooltip-durability-fill {
+    height: 100%;
+    border-radius: 2px;
+    background: var(--accent);
+    box-shadow: 0 0 4px var(--accent-glow);
+}
+
+/* ─── GHOST DRAG ────────────────────────────────────────────── */
+#drag-ghost {
+    position: fixed;
+    z-index: 10000;
+    pointer-events: none;
+    opacity: 0.90;
+    transform: translate(-50%, -50%) scale(1.1);
+    background: rgba(18, 22, 36, 0.95);
+    border: 1px solid var(--accent);
+    border-radius: var(--slot-radius);
+    padding: 6px;
+    width: 54px;
+    height: 54px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(14px);
+    box-shadow: 0 8px 26px rgba(0,0,0,0.65), 0 0 0 1px var(--accent-glow);
+}
+
+#drag-ghost img { width: 36px; height: 36px; object-fit: contain; }
+
+/* ─── MODAL QUANTITÉ ────────────────────────────────────────── */
+#qty-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9998;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.60);
+    backdrop-filter: blur(5px);
+}
+
+#qty-modal.hidden { display: none; }
+
+.qty-box {
+    background: rgba(16, 19, 30, 0.99);
+    border: 1px solid var(--border-mid);
+    border-top: 1px solid var(--accent-border);
+    border-radius: 10px;
+    padding: 26px;
+    width: 270px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    box-shadow: 0 22px 60px rgba(0,0,0,0.78);
+}
+
+.qty-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-main);
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    text-align: center;
+}
+
+.qty-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.qty-controls button {
+    width: 34px;
+    height: 34px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border-mid);
+    border-radius: 6px;
+    color: var(--text-main);
+    font-size: 14px;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.qty-controls button:hover {
+    border-color: var(--accent-border);
+    color: var(--accent);
+    background: var(--accent-dim);
+}
+
+#qty-value {
+    flex: 1;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border-mid);
+    border-radius: 6px;
+    color: var(--text-main);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    text-align: center;
+    padding: 7px;
+    outline: none;
+}
+
+#qty-value:focus { border-color: var(--accent-border); box-shadow: 0 0 0 2px var(--accent-glow); }
+
+.qty-max {
+    font-size: 9px;
+    color: var(--text-muted);
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: .8px;
+}
+
+.qty-actions { display: flex; gap: 8px; }
+
+.qty-actions button {
+    flex: 1;
+    padding: 11px;
+    border-radius: 6px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: var(--transition);
+}
+
+#qty-confirm {
+    background: var(--accent);
+    color: #051210;
+    box-shadow: 0 0 14px var(--accent-glow);
+}
+
+#qty-confirm:hover { filter: brightness(1.10); }
+
+#qty-cancel {
+    background: transparent;
+    border-color: var(--border-mid);
+    color: var(--text-sub);
+}
+
+#qty-cancel:hover { border-color: var(--border-mid); color: var(--text-main); background: rgba(255,255,255,0.05); }
+
+/* ─── NOTIFICATIONS ─────────────────────────────────────────── */
+#notifications {
+    position: fixed;
+    bottom: 26px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 6px;
+    z-index: 99999;
+    pointer-events: none;
+    min-width: 290px;
+    max-width: 390px;
+}
+
+.notif {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 15px;
+    background: rgba(16, 19, 30, 0.98);
+    border: 1px solid var(--border-subtle);
+    border-left: 3px solid var(--accent);
+    border-radius: 7px;
+    backdrop-filter: blur(18px);
+    animation: notifIn 0.20s ease forwards;
+    box-shadow: 0 8px 26px rgba(0,0,0,0.55);
+}
+
+.notif.success { border-left-color: var(--accent); }
+.notif.error   { border-left-color: var(--danger); }
+.notif.warning { border-left-color: var(--warning); }
+.notif.info    { border-left-color: var(--info); }
+
+.notif i { font-size: 13px; flex-shrink: 0; }
+.notif.success i { color: var(--accent); }
+.notif.error   i { color: var(--danger); }
+.notif.warning i { color: var(--warning); }
+.notif.info    i { color: var(--info); }
+
+.notif-msg {
+    font-size: 11px;
+    color: var(--text-main);
+    font-weight: 500;
+    letter-spacing: .2px;
+}
+
+.notif.removing { animation: notifOut 0.20s ease forwards; }
+
+@keyframes notifIn {
+    from { opacity: 0; transform: translateY(7px) scale(.98); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes notifOut {
+    from { opacity: 1; transform: translateY(0); }
+    to   { opacity: 0; transform: translateY(6px); }
+}
+
+/* ─── CONTEXT ICON ──────────────────────────────────────────── */
+.context-icon {
+    font-size: 14px;
+    color: var(--accent);
+    margin-right: 6px;
+    opacity: .80;
+}

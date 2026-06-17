@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+    /* ── Palette — dark slate (moins sombre que v1) ── */
+    --bg-deep:       #0f1120;
+    --bg-panel:      rgba(22, 26, 42, 0.97);
+    --bg-panel-alt:  rgba(26, 30, 48, 0.96);
+    --bg-header:     rgba(18, 22, 36, 0.98);
+    --bg-slot:       rgba(255, 255, 255, 0.055);
+    --bg-slot-hover: rgba(255, 255, 255, 0.10);
+
+    /* ── Bordures — visibles mais subtiles ── */
+    --border-subtle: rgba(255, 255, 255, 0.09);
+    --border-mid:    rgba(255, 255, 255, 0.15);
+    --border-panel:  rgba(255, 255, 255, 0.10);
+
+    /* ── Accent vert ── */
+    --accent:        #1ec87a;
+    --accent-dim:    rgba(30, 200, 122, 0.13);
+    --accent-glow:   rgba(30, 200, 122, 0.22);
+    --accent-border: rgba(30, 200, 122, 0.32);
+
+    /* ── Textes ── */
+    --text-main:  #dde2f0;
+    --text-sub:   rgba(190, 200, 225, 0.70);
+    --text-muted: rgba(150, 162, 195, 0.50);
+    --text-dim:   rgba(120, 132, 165, 0.40);
+
+    /* ── Statuts ── */
+    --danger:  #e85555;
+    --warning: #e8a030;
+    --info:    #5090f0;
+
+    /* ── Géométrie ── */
+    --panel-radius: 10px;
+    --slot-radius:  6px;
+    --transition:   0.14s ease;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+    margin: 0; padding: 0;
+    overflow: hidden;
+    user-select: none;
+    font-family: 'Inter', sans-serif;
+    background: transparent;
+    -webkit-font-smoothing: antialiased;
+}
+
+.hidden { display: none !important; }
+
+::-webkit-scrollbar       { width: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>fw_inventory</title>
+    <link rel="stylesheet" href="css/global.css" />
+    <link rel="stylesheet" href="css/inventory.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     NOTIFICATIONS (indépendantes de l'inventaire)
+══════════════════════════════════════════════ -->
+<div id="notifications"></div>
+
+<!-- ══════════════════════════════════════════════
+     RACINE INVENTAIRE
+══════════════════════════════════════════════ -->
+<div id="inventory-root" class="hidden">
+
+    <!-- ────────────── PANNEAU GAUCHE (Contexte) ────────────── -->
+    <div class="inv-panel" id="panel-context">
+        <div class="panel-header">
+            <div class="panel-header-top">
+                <div class="panel-title">
+                    <span class="context-icon" id="context-icon"><i class="fa-solid fa-box-open"></i></span>
+                    <span id="context-label">Items au sol</span>
+                </div>
+                <span class="panel-tag" id="context-tag">SOL</span>
+            </div>
+        </div>
+        <div class="slots-grid cols-4" id="context-slots" data-inv="context">
+            <!-- Slots générés par JS -->
+        </div>
+    </div>
+
+    <!-- ────────────── CENTRE (Ped + Boutons) ───────────────── -->
+    <div id="inv-center">
+
+        <!-- Ped rendu par le jeu — zone transparente -->
+        <div id="ped-area"></div>
+
+        <!-- Cash -->
+        <div id="cash-display">
+            <i class="fa-solid fa-money-bill-wave"></i>
+            <span id="cash-amount">0 $</span>
+        </div>
+
+        <!-- Boutons d'action -->
+        <div id="action-buttons">
+            <button class="action-btn" id="btn-give" title="Donner à un joueur proche">
+                <i class="fa-solid fa-hand-holding"></i>
+                Donner
+            </button>
+            <button class="action-btn danger" id="btn-drop" title="Jeter l'item au sol">
+                <i class="fa-solid fa-trash-can"></i>
+                Jeter
+            </button>
+            <button class="action-btn" id="btn-use" title="Utiliser / Équiper">
+                <i class="fa-solid fa-hand-pointer"></i>
+                Utiliser
+            </button>
+        </div>
+    </div>
+
+    <!-- ────────────── PANNEAU DROIT (Inventaire Joueur) ────── -->
+    <div class="inv-panel" id="panel-player">
+        <div class="panel-header">
+            <div class="panel-header-top">
+                <div class="panel-title">Inventaire</div>
+                <span class="panel-tag">JOUEUR</span>
+            </div>
+            <div class="weight-bar-wrap">
+                <div class="weight-info">
+                    <span>Poids</span>
+                    <span id="weight-text">0 / 30 kg</span>
+                </div>
+                <div class="weight-bar">
+                    <div class="weight-fill" id="weight-fill" style="width:0%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grille de slots -->
+        <div class="slots-grid" id="player-slots" data-inv="player">
+            <!-- Slots générés par JS -->
+        </div>
+
+        <!-- Hotbar -->
+        <div class="hotbar-row" id="hotbar" data-inv="hotbar">
+            <!-- Slots hotbar générés par JS -->
+        </div>
+    </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     TOOLTIP
+══════════════════════════════════════════════ -->
+<div id="inv-tooltip">
+    <div class="tooltip-name" id="tt-name"></div>
+    <div class="tooltip-desc" id="tt-desc"></div>
+    <div class="tooltip-meta" id="tt-meta"></div>
+    <div class="tooltip-durability hidden" id="tt-durability">
+        <div class="tooltip-durability-fill" id="tt-durability-fill"></div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     GHOST DRAG
+══════════════════════════════════════════════ -->
+<div id="drag-ghost">
+    <img id="drag-ghost-img" src="" alt="" />
+</div>
+
+<!-- ══════════════════════════════════════════════
+     MODAL QUANTITÉ
+══════════════════════════════════════════════ -->
+<div id="qty-modal" class="hidden">
+    <div class="qty-box">
+        <div class="qty-title" id="qty-title">Quantité</div>
+        <div class="qty-controls">
+            <button id="qty-minus"><i class="fa-solid fa-minus"></i></button>
+            <input type="number" id="qty-value" value="1" min="1" />
+            <button id="qty-plus"><i class="fa-solid fa-plus"></i></button>
+        </div>
+        <div class="qty-max" id="qty-max-label">Max : 1</div>
+        <div class="qty-actions">
+            <button id="qty-cancel">Annuler</button>
+            <button id="qty-confirm">Confirmer</button>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SCRIPTS
+══════════════════════════════════════════════ -->
+<script src="js/utils.js"></script>
+<script src="js/dragdrop.js"></script>
+<script src="js/hotbar.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
